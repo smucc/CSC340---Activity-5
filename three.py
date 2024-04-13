@@ -31,10 +31,15 @@ class IceCreamShopApp:
         self.show_flavors_options()
         self.show_toppings_options()
 
+        # Create reset order button
+        self.create_reset_button()
+        self.create_complete_order_button()
+
         # State variables to track confirmation status
         self.base_confirmed = False
         self.flavor_confirmed = False
         self.topping_confirmed = False
+        self.complete_order_button.config(state=tk.DISABLED)
 
         # Initialize selected items variables
         self.selected_base = None
@@ -68,8 +73,8 @@ class IceCreamShopApp:
 
         # Create label to display total price
         # Create label to display total price
-        self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 16))
-        self.total_label.grid(row=3, column=3, columnspan=3, padx=10, pady=10, sticky="s")
+        self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 24))
+        self.total_label.grid(row=3, column=3, columnspan=3, padx=20, pady=40, sticky="s")
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
@@ -79,6 +84,15 @@ class IceCreamShopApp:
         self.flavor_confirm_button.grid(row=1, column=2, padx=5, pady=5)
         self.topping_confirm_button = tk.Button(self.master, text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
         self.topping_confirm_button.grid(row=1, column=4, padx=5, pady=5)
+
+    def create_reset_button(self):
+        self.reset_button = tk.Button(self.master, width=30, height=6, text="Reset Order", font=("Arial", 15), command=self.reset_order)
+        self.reset_button.grid(row=3, column=4, padx=10, pady=10, sticky="n")
+
+
+    def create_complete_order_button(self):
+        self.complete_order_button = tk.Button(self.master, width=30, height=6, text = "Complete Order", font=("Arial", 15), command=self.complete_order)
+        self.complete_order_button.grid(row=3, column=4, padx=10, pady=10)
 
     def add_to_cart(self, option, price, category):
         # Format the option, category, and price to display in the listbox
@@ -265,6 +279,8 @@ class IceCreamShopApp:
             # Disable topping buttons
             for button in self.topping_options_frame.winfo_children():
                 button.config(state=tk.DISABLED)
+            self.complete_order_button.config(state=tk.NORMAL)
+
             # If all selections are confirmed, add items to the cart
             #self.add_to_cart(self.selected_base, None, "Base")
             #self.add_to_cart(self.selected_flavor, None, "Flavor")
@@ -274,6 +290,75 @@ class IceCreamShopApp:
     def display_total_price(self):
         # Update the text of the total label with the current total price
         self.total_label.config(text=f"TOTAL: ${self.total_price:.2f}")
+
+    def reset_order(self):
+        # Clear selected items list
+        self.selected_items_listbox.delete(0, tk.END)
+
+        # Reset confirmation status
+        self.base_confirmed = False
+        self.flavor_confirmed = False
+        self.topping_confirmed = False
+
+        # Reset selected items variables
+        self.selected_base = None
+        self.selected_flavor = None
+        self.selected_toppings = []
+
+        # Reset total price
+        self.total_price = decimal.Decimal('0.0')
+
+        # Reset buttons
+        self.base_confirm_button.config(state=tk.NORMAL)
+        self.flavor_confirm_button.config(state=tk.DISABLED)
+        self.topping_confirm_button.config(state=tk.DISABLED)
+
+        for button in self.base_options_frame.winfo_children():
+            button.config(state=tk.NORMAL)
+
+        for button in self.flavor_options_frame.winfo_children():
+            button.config(state=tk.DISABLED)
+
+        for button in self.topping_options_frame.winfo_children():
+            button.config(state=tk.DISABLED)
+
+        # Display the total price
+        self.display_total_price()
+
+
+    def complete_order(self):
+        # Clear selected items list
+        self.selected_items_listbox.delete(0, tk.END)
+
+        # Reset confirmation status
+        self.base_confirmed = False
+        self.flavor_confirmed = False
+        self.topping_confirmed = False
+
+        # Reset selected items variables
+        self.selected_base = None
+        self.selected_flavor = None
+        self.selected_toppings = []
+
+        # Reset total price
+        self.total_price = decimal.Decimal('0.0')
+
+        # Reset buttons
+        self.base_confirm_button.config(state=tk.NORMAL)
+        self.flavor_confirm_button.config(state=tk.DISABLED)
+        self.topping_confirm_button.config(state=tk.DISABLED)
+
+        for button in self.base_options_frame.winfo_children():
+            button.config(state=tk.NORMAL)
+
+        for button in self.flavor_options_frame.winfo_children():
+            button.config(state=tk.DISABLED)
+
+        for button in self.topping_options_frame.winfo_children():
+            button.config(state=tk.DISABLED)
+
+        # Display the total price
+        self.display_total_price()
 
 
 root = tk.Tk()
