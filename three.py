@@ -1,5 +1,6 @@
 import tkinter as tk
 import mysql.connector
+import decimal
 
 class IceCreamShopApp:
     def __init__(self, master):
@@ -14,41 +15,15 @@ class IceCreamShopApp:
             database="IceCream"
         )
 
-        # Configure the main window to expand to the entire screen
-        #master.attributes('-fullscreen', True)
-
-        # Create frame for base options
-        self.base_options_frame = tk.Frame(master)
-        self.base_options_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
-
-        # Create frame for flavor options
-        self.flavor_options_frame = tk.Frame(master)
-        self.flavor_options_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
-
-        # Create frame for topping options
-        self.topping_options_frame = tk.Frame(master)
-        self.topping_options_frame.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
-
-        # Create divider frames
-        divider1 = tk.Frame(master, bg="black", width=2)
-        divider1.grid(row=0, column=1, rowspan=3, padx=10, pady=10, sticky="ns")
-        divider2 = tk.Frame(master, bg="black", width=2)
-        divider2.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky="ns")
-
-        divider3 = tk.Frame(master, bg="black", width=50)
-        divider3.grid(row=2, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
+        # Create frames for options and dividers
+        self.create_frames_and_dividers()
 
         # Create listbox for selected items
         self.selected_items_listbox = tk.Listbox(master, width=50, height=20)
         self.selected_items_listbox.grid(row=3, column=1, columnspan=3, padx=10, pady=10, sticky="nsew")
 
         # Create confirm buttons for base, flavor, and topping selection
-        self.base_confirm_button = tk.Button(master, text="Confirm Base", command=self.confirm_base)
-        self.base_confirm_button.grid(row=1, column=0, padx=5, pady=5)
-        self.flavor_confirm_button = tk.Button(master, text="Confirm Flavor", command=self.confirm_flavor)
-        self.flavor_confirm_button.grid(row=1, column=2, padx=5, pady=5)
-        self.topping_confirm_button = tk.Button(master, text="Confirm Topping", command=self.confirm_topping)
-        self.topping_confirm_button.grid(row=1, column=4, padx=5, pady=5)
+        self.create_confirm_buttons()
 
         # Display options for each category
         self.show_base_options()
@@ -60,7 +35,49 @@ class IceCreamShopApp:
         self.flavor_confirmed = False
         self.topping_confirmed = False
 
-        self.total_price = 0.0  # Initialize total price variable
+        # Initialize selected items variables
+        self.selected_base = None
+        self.selected_flavor = None
+        self.selected_toppings = []
+
+        self.total_price = decimal.Decimal('0.0')
+        #self.total_price = 0.0  # Initialize total price variable
+
+    def create_frames_and_dividers(self):
+        # Create frame for base options
+        self.base_options_frame = tk.Frame(self.master)
+        self.base_options_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Create frame for flavor options
+        self.flavor_options_frame = tk.Frame(self.master)
+        self.flavor_options_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+
+        # Create frame for topping options
+        self.topping_options_frame = tk.Frame(self.master)
+        self.topping_options_frame.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
+
+        # Create divider frames
+        divider1 = tk.Frame(self.master, bg="black", width=2)
+        divider1.grid(row=0, column=1, rowspan=3, padx=10, pady=10, sticky="ns")
+        divider2 = tk.Frame(self.master, bg="black", width=2)
+        divider2.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky="ns")
+
+        divider3 = tk.Frame(self.master, bg="black", width=50)
+        divider3.grid(row=2, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
+
+        # Create label to display total price
+        # Create label to display total price
+        self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 16))
+        self.total_label.grid(row=3, column=3, columnspan=3, padx=10, pady=10, sticky="s")
+
+    def create_confirm_buttons(self):
+        # Create confirm buttons for base, flavor, and topping selection
+        self.base_confirm_button = tk.Button(self.master, text="Confirm Base", command=self.confirm_base)
+        self.base_confirm_button.grid(row=1, column=0, padx=5, pady=5)
+        self.flavor_confirm_button = tk.Button(self.master, text="Confirm Flavor", command=self.confirm_flavor)
+        self.flavor_confirm_button.grid(row=1, column=2, padx=5, pady=5)
+        self.topping_confirm_button = tk.Button(self.master, text="Confirm Topping", command=self.confirm_topping)
+        self.topping_confirm_button.grid(row=1, column=4, padx=5, pady=5)
 
     def add_to_cart(self, option, price, category):
         # Calculate the maximum width of existing items or set a default width
@@ -73,7 +90,7 @@ class IceCreamShopApp:
         # Format the item and price to display in the listbox
         if price is not None:
             formatted_price = f"${price:.2f}".rjust(max_width)
-            item = f"{option} {' ' * (max_width - len(option))}- ${price:.2f} ({category})"
+            item = f"{option} {' ' * (max_width - len(option))} ({category})- ${price:.2f}"
             # Update total price
             self.total_price += price
         else:
@@ -83,6 +100,11 @@ class IceCreamShopApp:
         if item not in self.selected_items_listbox.get(0, tk.END):
             # Append the item to the list
             self.selected_items_listbox.insert(tk.END, item)
+
+        # Remove existing "Total" entries
+        total_indices = [i for i, item in enumerate(self.selected_items_listbox.get(0, tk.END)) if "Total" in item]
+        for index in total_indices:
+            self.selected_items_listbox.delete(index)
 
         # Display the total price at the bottom of the list
         self.display_total_price()
@@ -133,19 +155,23 @@ class IceCreamShopApp:
             col_num = i % 3   # Determine the column number
             tk.Button(self.topping_options_frame, text=button_text, command=command, width=17, height=4).grid(row=row_num, column=col_num, padx=5, pady=5)
 
+
     def select_base(self, base, price):
         # Clear previous base selection if any
-        if self.base_confirmed:
-            self.selected_items_listbox.delete(0, tk.END)
-            self.base_confirmed = False
-
-        # Update the selected base directly
         self.selected_base = f"{base} - ${price:.2f}"
-        # Update the listbox display
-        self.add_to_cart(base, price, "Base")
+        # Remove previously added base from the cart if it exists
+        self.selected_items_listbox.delete(0, tk.END)
+        # Convert price to Decimal
+        price_decimal = decimal.Decimal(price)
+        # Add the most recent base to the cart
+        self.add_to_cart(base, price_decimal, "Base")
+        # Update the total price with the price of the most recent base
+        self.total_price = price_decimal
+        # Display the total price
+        self.display_total_price()
 
     def select_flavor(self, flavor, price):
-        if self.base_confirmed and not self.flavor_confirmed:
+        if self.base_confirmed:
             # Update the selected flavor directly
             self.selected_flavor = f"{flavor} - ${price:.2f}"
             # Call add_to_cart to update the list
@@ -159,7 +185,7 @@ class IceCreamShopApp:
                 self.confirm_flavor()
 
     def select_topping(self, topping, price):
-        if self.base_confirmed and self.flavor_confirmed and not self.topping_confirmed:
+        if self.base_confirmed and self.flavor_confirmed:
             # Check if already 5 toppings selected
             if len(self.selected_toppings) < 5:
                 self.selected_toppings.append((topping, price))
@@ -168,13 +194,20 @@ class IceCreamShopApp:
                 print("Maximum 5 toppings allowed.")
 
     def confirm_base(self):
-        # Set base confirmation status
-        self.base_confirmed = True
-        # Update the listbox with the confirmed base selection
-        self.add_to_cart(self.selected_base, None, "Base")
+        if self.selected_base:
+            # Clear the selected base
+            self.selected_base = None
+            # Set base confirmation status
+            self.base_confirmed = True
+            # Disable base buttons
+            for button in self.base_options_frame.winfo_children():
+                button.config(state=tk.DISABLED)
+        else:
+            print("Please select a base before confirming.")
 
     def confirm_flavor(self):
-        if self.base_confirmed:
+        if self.base_confirmed and not self.flavor_confirmed:
+            # Set flavor confirmation status
             self.flavor_confirmed = True
 
     def confirm_topping(self):
@@ -185,6 +218,11 @@ class IceCreamShopApp:
             self.add_to_cart(self.selected_flavor, None, "Flavor")
             for topping, price in self.selected_toppings:
                 self.add_to_cart(topping, price, "Topping")
+
+    def display_total_price(self):
+        # Update the text of the total label with the current total price
+        self.total_label.config(text=f"TOTAL: ${self.total_price:.2f}")
+
 
 root = tk.Tk()
 app = IceCreamShopApp(root)
