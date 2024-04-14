@@ -2,6 +2,9 @@ import tkinter as tk
 import mysql.connector
 import decimal
 
+import mysql.connector
+import tkinter as tk
+
 class IceCreamShopApp:
     def __init__(self, master):
         self.master = master
@@ -20,8 +23,8 @@ class IceCreamShopApp:
 
         # Create listbox for selected items
         # Create listbox for selected items with larger font size
-        self.selected_items_listbox = tk.Listbox(master, width=50, height=20, font=("Arial", 14))
-        self.selected_items_listbox.grid(row=3, column=1, columnspan=3, padx=10, pady=10, sticky="nsew")
+        self.selected_items_listbox = tk.Listbox(master, width=50, height=18, font=("Arial", 14))
+        self.selected_items_listbox.grid(row=4, column=2, columnspan=2, padx=10, pady=10, sticky="nsew")
 
         # Create confirm buttons for base, flavor, and topping selection
         self.create_confirm_buttons()
@@ -34,6 +37,11 @@ class IceCreamShopApp:
         # Create reset order button
         self.create_reset_button()
         self.create_complete_order_button()
+
+        # Create rating buttons
+        self.create_bad_rating_button()
+        self.create_ok_rating_button()
+        self.create_great_rating_button()
 
         # State variables to track confirmation status
         self.base_confirmed = False
@@ -49,50 +57,91 @@ class IceCreamShopApp:
         self.total_price = decimal.Decimal('0.0')
         #self.total_price = 0.0  # Initialize total price variable
 
+        # Labels for displaying most popular items
+        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_base_label.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
+
+        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_flavor_label.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+
+        self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
+
+        self.rate_us_label = tk.Label(master, text="", font=("Arial", 16))
+        self.rate_us_label.grid(row=4, column=1, padx=10, pady=10)
+
+        # Display the most popular items
+        self.display_most_popular_items()
+
+
     def create_frames_and_dividers(self):
         # Create frame for base options
         self.base_options_frame = tk.Frame(self.master)
-        self.base_options_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.base_options_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
         # Create frame for flavor options
         self.flavor_options_frame = tk.Frame(self.master)
-        self.flavor_options_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.flavor_options_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
 
         # Create frame for topping options
         self.topping_options_frame = tk.Frame(self.master)
-        self.topping_options_frame.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
+        self.topping_options_frame.grid(row=1, column=4, padx=10, pady=10, sticky="nsew")
 
         # Create divider frames
         divider1 = tk.Frame(self.master, bg="black", width=2)
-        divider1.grid(row=0, column=1, rowspan=3, padx=10, pady=10, sticky="ns")
+        divider1.grid(row=0, column=1, rowspan=4, padx=10, pady=10, sticky="ns")
         divider2 = tk.Frame(self.master, bg="black", width=2)
-        divider2.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky="ns")
+        divider2.grid(row=0, column=3, rowspan=4, padx=10, pady=10, sticky="ns")
 
         divider3 = tk.Frame(self.master, bg="black", width=50)
-        divider3.grid(row=2, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
+        divider3.grid(row=3, column=0, columnspan=5, padx=10, pady=10, sticky="ew")
 
         # Create label to display total price
         # Create label to display total price
         self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 24))
-        self.total_label.grid(row=3, column=3, columnspan=3, padx=20, pady=40, sticky="s")
+        self.total_label.grid(row=4, column=3, columnspan=3, padx=20, pady=40, sticky="s")
+
+        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Arial", 24))
+        self.bases_label.grid(row=0, column=0, sticky="n")
+
+        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Arial", 24))
+        self.flavors_label.grid(row=0, column=2, sticky="n")
+
+        self.toppings_label = tk.Label(self.master, text="Select up to 5 Toppings", font=("Arial", 24))
+        self.toppings_label.grid(row=0, column=4, sticky="n")
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
         self.base_confirm_button = tk.Button(self.master, text="Confirm Base", command=self.confirm_base)
-        self.base_confirm_button.grid(row=1, column=0, padx=5, pady=5)
+        self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
         self.flavor_confirm_button = tk.Button(self.master, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
-        self.flavor_confirm_button.grid(row=1, column=2, padx=5, pady=5)
+        self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
         self.topping_confirm_button = tk.Button(self.master, text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
-        self.topping_confirm_button.grid(row=1, column=4, padx=5, pady=5)
+        self.topping_confirm_button.grid(row=2, column=4, padx=5, pady=5)
 
     def create_reset_button(self):
         self.reset_button = tk.Button(self.master, width=30, height=6, text="Reset Order", font=("Arial", 15), command=self.reset_order)
-        self.reset_button.grid(row=3, column=4, padx=10, pady=10, sticky="n")
+        self.reset_button.grid(row=4, column=4, padx=10, pady=10, sticky="n")
 
 
     def create_complete_order_button(self):
         self.complete_order_button = tk.Button(self.master, width=30, height=6, text = "Complete Order", font=("Arial", 15), command=self.complete_order)
-        self.complete_order_button.grid(row=3, column=4, padx=10, pady=10)
+        self.complete_order_button.grid(row=4, column=4, padx=10, pady=10)
+
+    def create_bad_rating_button(self):
+        self.bad_rating_button = tk.Button(self.master, width=6, height=3, text="BAD",
+                                               font=("Arial", 10), command=self.give_bad_rating)
+        self.bad_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="n")
+
+    def create_ok_rating_button(self):
+        self.ok_rating_button = tk.Button(self.master, width=6, height=3, text="OK",
+                                               font=("Arial", 10), command=self.give_ok_rating)
+        self.ok_rating_button.grid(row=4, column=1, padx=10, pady=10)
+
+    def create_great_rating_button(self):
+        self.great_rating_button = tk.Button(self.master, width=6, height=3, text="GREAT",
+                                               font=("Arial", 10), command=self.give_great_rating)
+        self.great_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="s")
 
     def add_to_cart(self, option, price, category):
         # Format the option, category, and price to display in the listbox
@@ -181,6 +230,7 @@ class IceCreamShopApp:
         self.total_price = price_decimal
         # Display the total price
         self.display_total_price()
+        self.final_base = base
 
         # Enable flavor buttons
         #for button in self.flavor_options_frame.winfo_children():
@@ -214,6 +264,7 @@ class IceCreamShopApp:
             #self.total_price = price_decimal
             # Display the total price
             self.display_total_price()
+            self.final_flavor = flavor
 
             # Enable confirm button
             self.flavor_confirm_button.config(state=tk.NORMAL)
@@ -325,40 +376,83 @@ class IceCreamShopApp:
         # Display the total price
         self.display_total_price()
 
-
     def complete_order(self):
-        # Clear selected items list
-        self.selected_items_listbox.delete(0, tk.END)
+        # Get order information
+        order_base = self.final_base
+        order_flavor = self.final_flavor
+        order_toppings = ', '.join([topping[0] for topping in self.selected_toppings])
+        order_price = self.total_price
 
-        # Reset confirmation status
-        self.base_confirmed = False
-        self.flavor_confirmed = False
-        self.topping_confirmed = False
+        # Insert order into database
+        cursor = self.mydb.cursor()
+        sql = "INSERT INTO Orders (base, flavor, toppings, price) VALUES (%s, %s, %s, %s)"
+        values = (order_base, order_flavor, order_toppings, order_price)
+        cursor.execute(sql, values)
+        self.mydb.commit()
 
-        # Reset selected items variables
-        self.selected_base = None
-        self.selected_flavor = None
-        self.selected_toppings = []
-
-        # Reset total price
-        self.total_price = decimal.Decimal('0.0')
-
-        # Reset buttons
-        self.base_confirm_button.config(state=tk.NORMAL)
-        self.flavor_confirm_button.config(state=tk.DISABLED)
-        self.topping_confirm_button.config(state=tk.DISABLED)
-
-        for button in self.base_options_frame.winfo_children():
-            button.config(state=tk.NORMAL)
-
-        for button in self.flavor_options_frame.winfo_children():
-            button.config(state=tk.DISABLED)
-
-        for button in self.topping_options_frame.winfo_children():
-            button.config(state=tk.DISABLED)
+        # Reset order variables
+        self.reset_order()
 
         # Display the total price
         self.display_total_price()
+
+        # Display most popular items
+        self.display_most_popular_items()
+
+    def display_most_recent_order(self):
+        # Fetch most recent order from database
+        cursor = self.mydb.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Orders ORDER BY order_id DESC LIMIT 1")
+        recent_order = cursor.fetchone()
+
+        # Display the most recent order on the GUI
+        if recent_order:
+            order_info = f"Base: {recent_order['base']}, Flavor: {recent_order['flavor']}, Toppings: {recent_order['toppings']}, Price: ${recent_order['price']:.2f}"
+            self.most_recent_order_label.config(text=order_info)
+
+    def display_most_popular_items(self):
+        cursor = self.mydb.cursor()
+
+        # Find the most popular base
+        cursor.execute("SELECT base, COUNT(*) AS base_count FROM Orders GROUP BY base ORDER BY base_count DESC LIMIT 1")
+        most_popular_base = cursor.fetchone()
+        if most_popular_base:
+            self.most_popular_base_label.config(text=f"Most Popular Base: {most_popular_base[0]}")
+        else:
+            self.most_popular_base_label.config(text=f"Most Popular Base: None")
+
+        # Find the most popular flavor
+        cursor.execute(
+            "SELECT flavor, COUNT(*) AS flavor_count FROM Orders GROUP BY flavor ORDER BY flavor_count DESC LIMIT 1")
+        most_popular_flavor = cursor.fetchone()
+        if most_popular_flavor:
+            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: {most_popular_flavor[0]}")
+        else:
+            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: None")
+
+        # Find the most popular topping
+        cursor.execute(
+            "SELECT toppings, COUNT(*) AS topping_count FROM Orders GROUP BY toppings ORDER BY topping_count DESC LIMIT 1")
+        most_popular_topping = cursor.fetchone()
+        if most_popular_topping:
+            self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0]}")
+        else:
+            self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
+
+    def give_bad_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("BAD",))
+        self.mydb.commit()
+
+    def give_ok_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("OK",))
+        self.mydb.commit()
+
+    def give_great_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("GREAT",))
+        self.mydb.commit()
 
 
 root = tk.Tk()
