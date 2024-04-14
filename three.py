@@ -11,7 +11,7 @@ class IceCreamShopApp:
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="fantasyape123",
+            password="20Horses!",
             database="IceCream"
         )
 
