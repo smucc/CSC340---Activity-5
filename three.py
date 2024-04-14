@@ -38,6 +38,11 @@ class IceCreamShopApp:
         self.create_reset_button()
         self.create_complete_order_button()
 
+        # Create rating buttons
+        #self.create_bad_rating_button()
+        #self.create_ok_rating_button()
+        #self.create_good_rating_button()
+
         # State variables to track confirmation status
         self.base_confirmed = False
         self.flavor_confirmed = False
@@ -61,6 +66,9 @@ class IceCreamShopApp:
 
         self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16))
         self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
+
+        self.rate_us_label = tk.Label(master, text="", font=("Arial", 16))
+        self.rate_us_label.grid(row=4, column=1, padx=10, pady=10)
 
         # Display the most popular items
         self.display_most_popular_items()
@@ -395,6 +403,8 @@ class IceCreamShopApp:
         most_popular_base = cursor.fetchone()
         if most_popular_base:
             self.most_popular_base_label.config(text=f"Most Popular Base: {most_popular_base[0]}")
+        else:
+            self.most_popular_base_label.config(text=f"Most Popular Base: None")
 
         # Find the most popular flavor
         cursor.execute(
@@ -402,6 +412,8 @@ class IceCreamShopApp:
         most_popular_flavor = cursor.fetchone()
         if most_popular_flavor:
             self.most_popular_flavor_label.config(text=f"Most Popular Flavor: {most_popular_flavor[0]}")
+        else:
+            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: None")
 
         # Find the most popular topping
         cursor.execute(
@@ -409,6 +421,8 @@ class IceCreamShopApp:
         most_popular_topping = cursor.fetchone()
         if most_popular_topping:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0]}")
+        else:
+            self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
 
 root = tk.Tk()
 app = IceCreamShopApp(root)
