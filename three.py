@@ -39,9 +39,9 @@ class IceCreamShopApp:
         self.create_complete_order_button()
 
         # Create rating buttons
-        #self.create_bad_rating_button()
-        #self.create_ok_rating_button()
-        #self.create_good_rating_button()
+        self.create_bad_rating_button()
+        self.create_ok_rating_button()
+        self.create_great_rating_button()
 
         # State variables to track confirmation status
         self.base_confirmed = False
@@ -127,6 +127,21 @@ class IceCreamShopApp:
     def create_complete_order_button(self):
         self.complete_order_button = tk.Button(self.master, width=30, height=6, text = "Complete Order", font=("Arial", 15), command=self.complete_order)
         self.complete_order_button.grid(row=4, column=4, padx=10, pady=10)
+
+    def create_bad_rating_button(self):
+        self.bad_rating_button = tk.Button(self.master, width=6, height=3, text="BAD",
+                                               font=("Arial", 10), command=self.give_bad_rating)
+        self.bad_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="n")
+
+    def create_ok_rating_button(self):
+        self.ok_rating_button = tk.Button(self.master, width=6, height=3, text="OK",
+                                               font=("Arial", 10), command=self.give_ok_rating)
+        self.ok_rating_button.grid(row=4, column=1, padx=10, pady=10)
+
+    def create_great_rating_button(self):
+        self.great_rating_button = tk.Button(self.master, width=6, height=3, text="GREAT",
+                                               font=("Arial", 10), command=self.give_great_rating)
+        self.great_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="s")
 
     def add_to_cart(self, option, price, category):
         # Format the option, category, and price to display in the listbox
@@ -423,6 +438,22 @@ class IceCreamShopApp:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0]}")
         else:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
+
+    def give_bad_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("BAD",))
+        self.mydb.commit()
+
+    def give_ok_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("OK",))
+        self.mydb.commit()
+
+    def give_great_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("GREAT",))
+        self.mydb.commit()
+
 
 root = tk.Tk()
 app = IceCreamShopApp(root)
