@@ -373,6 +373,9 @@ class IceCreamShopApp:
         # Display the total price
         self.display_total_price()
 
+        # Display most popular items
+        self.display_most_popular_items()
+
     def display_most_recent_order(self):
         # Fetch most recent order from database
         cursor = self.mydb.cursor(dictionary=True)
