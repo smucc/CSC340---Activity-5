@@ -8,6 +8,7 @@ class IceCreamShopApp:
     def __init__(self, master):
         self.master = master
         master.title("Ice Cream Shop")
+        master.configure(bg="#FFB6C1")
 
         # Connect to MySQL database
         self.mydb = mysql.connector.connect(
@@ -16,6 +17,7 @@ class IceCreamShopApp:
             password="fantasyape123",
             database="IceCream"
         )
+
 
         # Creating frames for each category
         self.base_frame = tk.Frame(master)
