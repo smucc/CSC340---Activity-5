@@ -81,18 +81,18 @@ class IceCreamShopApp:
         self.most_popular_flavor_label.place(x=11, y=605)
 
         self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
-<<<<<<< HEAD
+# <<<<<<< HEAD
         #self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
         self.most_popular_topping_label.place(x=11, y=635)
 
         #self.rate_us_label = tk.Label(master, text="", font=("Arial", 16))
         #self.rate_us_label.place(x=1, y=1)
-=======
+# =======
         self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
 
         self.rate_us_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
         self.rate_us_label.grid(row=4, column=1, padx=10, pady=10)
->>>>>>> c9ee628b918baf9309ddf867f363def17f95c0db
+# >>>>>>> c9ee628b918baf9309ddf867f363def17f95c0db
 
         # Display the most popular items
         self.display_most_popular_items()
@@ -598,7 +598,7 @@ class IceCreamShopApp:
     def update_recent_ratings(self):
         # Retrieve the most recent 3 ratings from the Ratings table
         cursor = self.mydb.cursor()
-        cursor.execute("SELECT rating_value FROM Ratings ORDER BY rating_id DESC LIMIT 3")
+        cursor.execute("SELECT rating_value FROM Ratings ORDER BY rating_id DESC LIMIT 3") # rating_value
         recent_ratings = cursor.fetchall()
 
         # Format the recent ratings as a string

@@ -62,6 +62,8 @@ CREATE TABLE Orders(
 );
 
 CREATE TABLE Ratings(
+    Rating_Id INT,
+    Rating_Value INT,
     Rating INT,
     CHECK (Rating >= 1 AND Rating <= 5)
 );
