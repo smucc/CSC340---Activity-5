@@ -519,5 +519,3 @@ class IceCreamShopApp:
 root = tk.Tk()
 app = IceCreamShopApp(root)
 root.mainloop()
-
-#testestest
