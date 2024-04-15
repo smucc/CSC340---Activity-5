@@ -17,14 +17,14 @@ class IceCreamShopApp:
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="fantasyape123",
+            password="20Horses!",
             database="IceCream"
         )
 
         # Creating frames for each category
-        self.base_frame = tk.Frame(master)
-        self.flavor_frame = tk.Frame(master)
-        self.toppings_frame = tk.Frame(master)
+        self.base_frame = tk.Frame(master, bg="#FFB6C1")
+        self.flavor_frame = tk.Frame(master, bg="#FFB6C1")
+        self.toppings_frame = tk.Frame(master, bg="#FFB6C1")
         self.base_frame.grid(row=0, column=0)
         self.flavor_frame.grid(row=1, column=0)
         self.toppings_frame.grid(row=2, column=0)
@@ -39,7 +39,7 @@ class IceCreamShopApp:
 
         # Create listbox for selected items
         # Create listbox for selected items with larger font size
-        self.selected_items_listbox = tk.Listbox(master, width=40, height=12, font=("Arial", 14))
+        self.selected_items_listbox = tk.Listbox(master, width=40, height=12, font=("Arial", 14), bg="#FFB6C1")
         self.selected_items_listbox.grid(row=4, column=1, columnspan=3, padx=10, pady=10, sticky="n")
 
         # Create confirm buttons for base, flavor, and topping selection
@@ -71,18 +71,18 @@ class IceCreamShopApp:
         self.selected_toppings = []
 
         # Labels for displaying most popular items
-        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
         #self.most_popular_base_label.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
         self.most_popular_base_label.place(x=12, y=535)
 
-        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
         #self.most_popular_flavor_label.grid(row=4, column=0, padx=10, pady=10, sticky="w")
         self.most_popular_flavor_label.place(x=75, y=325)
 
-        self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
         self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
 
-        self.rate_us_label = tk.Label(master, text="", font=("Arial", 16))
+        self.rate_us_label = tk.Label(master, text="", font=("Arial", 16), bg="#FFB6C1")
         self.rate_us_label.grid(row=4, column=1, padx=10, pady=10)
 
         # Display the most popular items
@@ -231,7 +231,7 @@ class IceCreamShopApp:
             base = base.replace("_", " ")
             img_path = image_filenames[i % len(image_filenames)]  # Cycle through images
             img = Image.open(img_path)
-            img = img.resize((150, 150), Image.Resampling.LANCZOS)  # Resize image
+            img = img.resize((125, 125), Image.Resampling.LANCZOS)  # Resize image
             photo = ImageTk.PhotoImage(img)
 
             self.base_images.append(photo)  # Keep a reference to avoid garbage collection
@@ -255,7 +255,7 @@ class IceCreamShopApp:
             flavor = flavor.replace("_", " ")
             img_path = image_filenames[i % len(image_filenames)]  # Cycle through images
             img = Image.open(img_path)
-            img = img.resize((100, 100), Image.Resampling.LANCZOS)  # Resize image
+            img = img.resize((125, 125), Image.Resampling.LANCZOS)  # Resize image
             photo = ImageTk.PhotoImage(img)
 
             self.flavor_images.append(photo)  # Keep a reference to avoid garbage collection
@@ -282,7 +282,7 @@ class IceCreamShopApp:
             topping = topping.replace("_", " ")
             img_path = image_filenames[i % len(image_filenames)]  # Cycle through images
             img = Image.open(img_path)
-            img = img.resize((100, 100), Image.Resampling.LANCZOS)  # Resize image
+            img = img.resize((125, 125), Image.Resampling.LANCZOS)  # Resize image
             photo = ImageTk.PhotoImage(img)
 
             self.topping_images.append(photo)  # Keep a reference to avoid garbage collection
@@ -511,7 +511,7 @@ class IceCreamShopApp:
 
         # Find the most popular topping
         cursor.execute(
-            "SELECT toppings, COUNT(*) AS topping_count FROM Orders GROUP BY toppings ORDER BY topping_count DESC LIMIT 1")
+            "SELECT topping, COUNT(*) AS topping_count FROM Orders GROUP BY topping ORDER BY topping_count DESC LIMIT 1")
         most_popular_topping = cursor.fetchone()
         if most_popular_topping:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0].replace('_', ' ')}")
