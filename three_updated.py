@@ -13,7 +13,7 @@ class IceCreamShopApp:
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="20Horses!",
+            password="fantasyape123",
             database="IceCream"
         )
 
@@ -36,7 +36,7 @@ class IceCreamShopApp:
         # Create listbox for selected items
         # Create listbox for selected items with larger font size
         self.selected_items_listbox = tk.Listbox(master, width=50, height=20, font=("Arial", 14))
-        self.selected_items_listbox.grid(row=3, column=1, columnspan=3, padx=10, pady=10, sticky="nsew")
+        self.selected_items_listbox.grid(row=4, column=1, columnspan=3, padx=10, pady=10, sticky="nsew")
 
         # Create confirm buttons for base, flavor, and topping selection
         self.create_confirm_buttons()
@@ -45,6 +45,11 @@ class IceCreamShopApp:
         self.show_base_options()
         self.show_flavors_options()
         self.show_toppings_options()
+
+        # Create rating buttons
+        self.create_bad_rating_button()
+        self.create_ok_rating_button()
+        self.create_great_rating_button()
 
         # Create reset order button
         self.create_reset_button()
@@ -61,6 +66,22 @@ class IceCreamShopApp:
         self.selected_flavor = None
         self.selected_toppings = []
 
+        # Labels for displaying most popular items
+        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_base_label.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
+
+        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_flavor_label.grid(row=4, column=0, padx=10, pady=10, sticky="w")
+
+        self.most_popular_topping_label = tk.Label(master, text="", font=("Arial", 16))
+        self.most_popular_topping_label.grid(row=4, column=0, padx=10, pady=10, sticky="sw")
+
+        self.rate_us_label = tk.Label(master, text="", font=("Arial", 16))
+        self.rate_us_label.grid(row=4, column=1, padx=10, pady=10)
+
+        # Display the most popular items
+        self.display_most_popular_items()
+
         self.total_price = decimal.Decimal('0.0')
         #self.total_price = 0.0  # Initialize total price variable
 
@@ -73,34 +94,43 @@ class IceCreamShopApp:
 
         # Create frame for base options
         self.base_options_frame = tk.Frame(self.master)
-        self.base_options_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        self.base_options_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
         # Create frame for flavor options
         self.flavor_options_frame = tk.Frame(self.master)
-        self.flavor_options_frame.grid(row=0, column=2, padx=10, pady=10, sticky="nsew")
+        self.flavor_options_frame.grid(row=1, column=2, padx=10, pady=10, sticky="nsew")
 
         # Create frame for topping options
         self.topping_options_frame = tk.Frame(self.master)
-        self.topping_options_frame.grid(row=0, column=4, padx=10, pady=10, sticky="nsew")
+        self.topping_options_frame.grid(row=1, column=4, padx=10, pady=10, sticky="nsew")
 
         # Create divider frames
         divider1 = tk.Frame(self.master, bg="black", width=2)
-        divider1.grid(row=0, column=1, rowspan=3, padx=10, pady=10, sticky="ns")
+        divider1.grid(row=1, column=1, rowspan=3, padx=10, pady=10, sticky="ns")
         divider2 = tk.Frame(self.master, bg="black", width=2)
-        divider2.grid(row=0, column=3, rowspan=3, padx=10, pady=10, sticky="ns")
+        divider2.grid(row=1, column=3, rowspan=3, padx=10, pady=10, sticky="ns")
 
         divider3 = tk.Frame(self.master, bg="black", width=50)
-        divider3.grid(row=2, column=10, columnspan=5, padx=10, pady=10, sticky="ew")
+        divider3.grid(row=3, column=10, columnspan=5, padx=10, pady=5, sticky="ew")
 
         # Create label to display total price
         # Create label to display total price
         self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 24))
-        self.total_label.grid(row=3, column=15, columnspan=15, padx=50, pady=70, sticky="s")
+        self.total_label.grid(row=4, column=4, columnspan=15, padx=50, pady=70, sticky="s")
+
+        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Arial", 24))
+        self.bases_label.grid(row=0, column=0, sticky="n")
+
+        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Arial", 24))
+        self.flavors_label.grid(row=0, column=2, sticky="n")
+
+        self.toppings_label = tk.Label(self.master, text="Select up to 5 Toppings", font=("Arial", 24))
+        self.toppings_label.grid(row=0, column=4, sticky="n")
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
         self.base_confirm_button = tk.Button(self.master, text="Confirm Base", command=self.confirm_base)
-        self.base_confirm_button.grid(row=1, column=0, padx=5, pady=5)
+        self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
         self.flavor_confirm_button = tk.Button(self.master, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
         self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
         self.topping_confirm_button = tk.Button(self.master, text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
@@ -108,12 +138,28 @@ class IceCreamShopApp:
 
     def create_reset_button(self):
         self.reset_button = tk.Button(self.master, width=30, height=6, text="Reset Order", font=("Arial", 15), command=self.reset_order)
-        self.reset_button.grid(row=3, column=4, padx=10, pady=10, sticky="n")
+        self.reset_button.grid(row=4, column=4, padx=10, pady=10, sticky="n")
 
 
     def create_complete_order_button(self):
         self.complete_order_button = tk.Button(self.master, width=30, height=6, text = "Complete Order", font=("Arial", 15), command=self.complete_order)
-        self.complete_order_button.grid(row=3, column=4, padx=10, pady=10)
+        self.complete_order_button.grid(row=4, column=4, padx=10, pady=10)
+
+    def create_bad_rating_button(self):
+        self.bad_rating_button = tk.Button(self.master, width=6, height=3, text="BAD",
+                                               font=("Arial", 10), command=self.give_bad_rating)
+        self.bad_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="n")
+
+    def create_ok_rating_button(self):
+        self.ok_rating_button = tk.Button(self.master, width=6, height=3, text="OK",
+                                               font=("Arial", 10), command=self.give_ok_rating)
+        self.ok_rating_button.grid(row=4, column=1, padx=10, pady=10)
+
+    def create_great_rating_button(self):
+        self.great_rating_button = tk.Button(self.master, width=6, height=3, text="GREAT",
+                                               font=("Arial", 10), command=self.give_great_rating)
+        self.great_rating_button.grid(row=4, column=1, padx=10, pady=10, sticky="s")
+
 
     def add_to_cart(self, option, price, category):
        # Debug: Output when adding to cart
@@ -177,8 +223,8 @@ class IceCreamShopApp:
 
             button_text = f"{base} - ${price:.2f}"
             command = lambda opt=base, prc=price: self.select_base(opt, prc)
-            row_num = i // 2  # Determine the row number
-            col_num = i % 2  # Determine the column number
+            row_num = i // 3  # Determine the row number
+            col_num = i % 3  # Determine the column number
             button = tk.Button(self.base_options_frame, text=button_text, image=photo, compound='top', command=command)
             button.image = photo  # Keep reference to image
             button.grid(row=row_num, column=col_num, padx=5, pady=5)
@@ -200,9 +246,9 @@ class IceCreamShopApp:
 
             button_text = f"{flavor} - ${price:.2f}"
             command = lambda opt=flavor, prc=price: self.select_flavor(opt, prc)
-            row_num = i // 2  # Determine the row number
-            col_num = i % 2  # Determine the column number
-            button = tk.Button(self.flavor_options_frame, text=button_text, image=photo, compound='top', command=command)
+            row_num = i // 3  # Determine the row number
+            col_num = i % 3  # Determine the column number
+            button = tk.Button(self.flavor_options_frame, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED)
             button.image = photo  # Keep reference to image
             button.grid(row=row_num, column=col_num, padx=5, pady=5)
 
@@ -226,9 +272,9 @@ class IceCreamShopApp:
 
             button_text = f"{topping} - ${price:.2f}"
             command = lambda opt=topping, prc=price: self.select_topping(opt, prc)
-            row_num = i // 2  # Determine the row number
-            col_num = i % 2  # Determine the column number
-            button = tk.Button(self.topping_options_frame, text=button_text, image=photo, compound='top', command=command)
+            row_num = i // 3  # Determine the row number
+            col_num = i % 3  # Determine the column number
+            button = tk.Button(self.topping_options_frame, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED)
             button.image = photo  # Keep reference to image
             button.grid(row=row_num, column=col_num, padx=5, pady=5)
 
@@ -425,12 +471,50 @@ class IceCreamShopApp:
         # Display the total price
         self.display_total_price()
 
-'''
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = IceCreamShopApp(root)
-    root.mainloop()
-'''
+
+    def display_most_popular_items(self):
+        cursor = self.mydb.cursor()
+
+        # Find the most popular base
+        cursor.execute("SELECT base, COUNT(*) AS base_count FROM Orders GROUP BY base ORDER BY base_count DESC LIMIT 1")
+        most_popular_base = cursor.fetchone()
+        if most_popular_base:
+            self.most_popular_base_label.config(text=f"Most Popular Base: {most_popular_base[0]}")
+        else:
+            self.most_popular_base_label.config(text=f"Most Popular Base: None")
+
+        # Find the most popular flavor
+        cursor.execute(
+            "SELECT flavor, COUNT(*) AS flavor_count FROM Orders GROUP BY flavor ORDER BY flavor_count DESC LIMIT 1")
+        most_popular_flavor = cursor.fetchone()
+        if most_popular_flavor:
+            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: {most_popular_flavor[0]}")
+        else:
+            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: None")
+
+        # Find the most popular topping
+        cursor.execute(
+            "SELECT toppings, COUNT(*) AS topping_count FROM Orders GROUP BY toppings ORDER BY topping_count DESC LIMIT 1")
+        most_popular_topping = cursor.fetchone()
+        if most_popular_topping:
+            self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0]}")
+        else:
+            self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
+
+    def give_bad_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("BAD",))
+        self.mydb.commit()
+
+    def give_ok_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("OK",))
+        self.mydb.commit()
+
+    def give_great_rating(self):
+        cursor = self.mydb.cursor()
+        cursor.callproc("InsertRating", ("GREAT",))
+        self.mydb.commit()
 
 root = tk.Tk()
 app = IceCreamShopApp(root)
