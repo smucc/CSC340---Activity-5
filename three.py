@@ -72,11 +72,11 @@ class IceCreamShopApp:
         self.selected_toppings = []
 
         # Labels for displaying most popular items
-        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 24), bg="#FFB6C1")
+        self.most_popular_base_label = tk.Label(master, text="", font=("Arial", 22), bg="#FFB6C1")
         #self.most_popular_base_label.grid(row=4, column=0, padx=10, pady=10, sticky="nw")
         self.most_popular_base_label.place(x=11, y=575)
 
-        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 24), bg="#FFB6C1")
+        self.most_popular_flavor_label = tk.Label(master, text="", font=("Arial", 22), bg="#FFB6C1")
         #self.most_popular_flavor_label.grid(row=4, column=0, padx=10, pady=10, sticky="w")
         self.most_popular_flavor_label.place(x=11, y=615)
 
@@ -94,15 +94,15 @@ class IceCreamShopApp:
         #self.total_price = 0.0  # Initialize total price variable
 
         # Create a label to display the most recent ratings
-        self.recent_ratings_label = tk.Label(master, text="Recent Ratings:", font=("Arial", 24), bg="#FFB6C1")
+        '''self.recent_ratings_label = tk.Label(master, text="Recent Ratings:", font=("Arial", 24), bg="#FFB6C1")
         #self.recent_ratings_label.grid(row=0, column=0, padx=10, pady=10, sticky="w")
-        self.recent_ratings_label.place(x=350, y=700)
+        self.recent_ratings_label.place(x=350, y=700)'''
 
 
         # Create a label to display the most recent ratings from the database
-        self.recent_ratings_text = tk.StringVar()
+        '''self.recent_ratings_text = tk.StringVar()
         self.recent_ratings_display = tk.Label(master, textvariable=self.recent_ratings_text, font=("Arial", 18), bg="#FFB6C1")
-        self.recent_ratings_display.place(x=350, y=755)
+        self.recent_ratings_display.place(x=350, y=755)'''
 
         # Display the most recent ratings initially
         self.update_recent_ratings()
@@ -136,7 +136,6 @@ class IceCreamShopApp:
         divider3.grid(row=3, column=0, columnspan=5, padx=10, pady=5, sticky="ew")
 
         # Create label to display total price
-        # Create label to display total price
         self.total_label = tk.Label(self.master, text="TOTAL: $0.00", font=("Arial", 30), bg="#FFB6C1")
         #self.total_label.grid(row=4, column=4, columnspan=15, padx=50, pady=70, sticky= "s")
         self.total_label.place(x=1180, y=795)
@@ -145,13 +144,13 @@ class IceCreamShopApp:
         # self.total_label.grid(row=4, column=4, columnspan=15, padx=50, pady=70, sticky= "s")
         self.rate_us_label.place(x=105, y=700)
 
-        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Vivaldi Italic", 37), bg="#FFB6C1")
+        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Vivaldi Italic", 34), bg="#FFB6C1")
         #self.bases_label.grid(row=0, column=0, sticky="n")
-        self.bases_label.place(x=115, y=0)
+        self.bases_label.place(x=129, y=0)
 
-        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Vivaldi Italic", 37), bg="#FFB6C1")
+        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Vivaldi Italic", 34), bg="#FFB6C1")
         #self.flavors_label.grid(row=0, column=2,sticky="n")
-        self.flavors_label.place(x=650, y=0)
+        self.flavors_label.place(x=668, y=0)
 
         self.toppings_label = tk.Label(self.master, text="Select up to 5 Toppings", font=("Vivaldi Italic", 34), bg="#FFB6C1")
         #self.toppings_label.grid(row=0, column=4, sticky="n")
@@ -229,7 +228,7 @@ class IceCreamShopApp:
         self.great_rating_button = tk.Button(self.master, image=photo, width=width, height=height,
                                            font=("Arial", 10), command=self.give_great_rating)
         self.great_rating_button.place(x=215, y=749)
-##########################################################################################################################################3
+
     def add_to_cart(self, option, price, category):
        # Debug: Output when adding to cart
         print(f"Adding to cart: {option}, {price}, {category}")
@@ -261,6 +260,7 @@ class IceCreamShopApp:
 
         # Display the total price at the bottom of the list
         self.display_total_price()
+
     def display_total_price(self):
         # Check if the total price item is already in the list
         total_indices = [i for i, item in enumerate(self.selected_items_listbox.get(0, tk.END)) if "Total" in item]
@@ -621,7 +621,7 @@ class IceCreamShopApp:
         formatted_ratings = ", ".join([rating[0] for rating in recent_ratings])
 
         # Update the text variable of the label to display the recent ratings
-        self.recent_ratings_text.set(formatted_ratings)
+        '''self.recent_ratings_text.set(formatted_ratings)'''
 
 root = tk.Tk()
 app = IceCreamShopApp(root)
