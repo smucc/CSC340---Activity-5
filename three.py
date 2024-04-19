@@ -160,9 +160,9 @@ class IceCreamShopApp:
         # Create confirm buttons for base, flavor, and topping selection
         self.base_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Base", font=("Arial", 16), command=self.confirm_base)
         self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
-        self.flavor_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
+        self.flavor_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Flavor", font=("Arial", 16), command=self.confirm_flavor, state=tk.DISABLED)
         self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
-        self.topping_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
+        self.topping_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Topping", font=("Arial", 16),  command=self.confirm_topping, state=tk.DISABLED)
         self.topping_confirm_button.grid(row=2, column=4, padx=5, pady=5)
 
     def create_reset_button(self):
