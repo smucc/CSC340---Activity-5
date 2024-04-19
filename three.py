@@ -18,7 +18,7 @@ class IceCreamShopApp:
         self.mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="fantasyape123",
+            password="20Horses!",
             database="IceCream"
         )
 
@@ -158,7 +158,7 @@ class IceCreamShopApp:
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
-        self.base_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Base", command=self.confirm_base)
+        self.base_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Base", font=("Arial", 16), command=self.confirm_base)
         self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
         self.flavor_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
         self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
@@ -179,7 +179,7 @@ class IceCreamShopApp:
     from PIL import Image, ImageTk
 
     def create_bad_rating_button(self):
-        img_path = 'frowny.png'
+        img_path = 'frowny.jpeg'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
@@ -196,7 +196,7 @@ class IceCreamShopApp:
         self.bad_rating_button.place(x=35, y=749)  # Adjust these coordinates as needed
 
     def create_ok_rating_button(self):
-        img_path = 'neutral.png'
+        img_path = 'neutral.jpeg'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
@@ -213,7 +213,7 @@ class IceCreamShopApp:
         self.ok_rating_button.place(x=125, y=749)
 
     def create_great_rating_button(self):
-        img_path = 'smiley.png'
+        img_path = 'smiley.jpeg'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
