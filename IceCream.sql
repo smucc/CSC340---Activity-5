@@ -51,21 +51,91 @@ VALUES
     (8, 'REESES_CUPS', 1.25),
     (9, 'YELLOW_CAKE', 1.50);
 
+'''
 CREATE TABLE Orders(
+    ID INT PRIMARY KEY AUTO_INCREMENT,
+    BaseID INT,
+    FlavorID INT,
+    ToppingID INT,
+    Price DECIMAL (3,2),
+    FOREIGN KEY (BaseID) REFERENCES Base(ID),
+    FOREIGN KEY (FlavorID) REFERENCES Flavors(ID),
+    FOREIGN KEY (ToppingID) REFERENCES Toppings(ID)
+);'''
+
+CREATE TABLE Orders (
+    OrderID INT AUTO_INCREMENT PRIMARY KEY,
     Base VARCHAR(255),
     Flavor VARCHAR(255),
-    Topping VARCHAR(255),
-    Price DECIMAL (3,2),
-    FOREIGN KEY (Base) REFERENCES Base(Base),
-    FOREIGN KEY (Flavor) REFERENCES Flavors(Flavor),
-    FOREIGN KEY (Topping) REFERENCES Toppings(Topping)
+    Toppings VARCHAR(255),
+    Price DECIMAL(10, 2),
+    OrderTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE Ratings(
-    Rating_Id INT,
-    Rating_Value INT,
-    Rating INT,
-    CHECK (Rating >= 1 AND Rating <= 5)
+
+
+
+-- Step 2: Create the Ratings Table
+CREATE TABLE Ratings (
+    rating_id INT AUTO_INCREMENT PRIMARY KEY,
+    rating_value ENUM('GREAT', 'OK', 'BAD') NOT NULL,
+    inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-SELECT Base, Price FROM base;
+DELIMITER //
+
+CREATE PROCEDURE DeleteOldestRating()
+BEGIN
+    DECLARE oldest_id INT;
+    SET oldest_id = (SELECT rating_id FROM Ratings ORDER BY inserted_at ASC LIMIT 1);
+    DELETE FROM Ratings WHERE rating_id = oldest_id;
+END//
+
+CREATE TRIGGER maintain_ratings_limit_trigger
+AFTER INSERT ON Ratings
+FOR EACH ROW
+BEGIN
+    IF (SELECT COUNT(*) FROM Ratings) > 3 THEN
+        CALL DeleteOldestRating();
+    END IF;
+END//
+
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER maintain_ratings_limit_trigger
+AFTER INSERT ON Ratings
+FOR EACH ROW
+BEGIN
+    DECLARE rating_count INT;
+    SELECT COUNT(*) INTO rating_count FROM Ratings;
+    IF rating_count > 3 THEN
+        DELETE FROM Ratings
+        WHERE rating_id = (SELECT rating_id FROM Ratings ORDER BY inserted_at LIMIT 1);
+    END IF;
+END $$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE PROCEDURE InsertRating(
+    IN rating_value VARCHAR(10)
+)
+BEGIN
+    DECLARE rating_count INT;
+
+    -- Get the count of ratings
+    SELECT COUNT(*) INTO rating_count FROM Ratings;
+
+    -- If there are more than three ratings, delete the oldest one
+    IF rating_count >= 3 THEN
+        DELETE FROM Ratings ORDER BY inserted_at ASC LIMIT 1;
+    END IF;
+
+    -- Insert the new rating
+    INSERT INTO Ratings (rating_value) VALUES (rating_value);
+END $$
+DELIMITER ;
+
+SELECT *
+FROM RATINGS;
