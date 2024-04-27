@@ -229,7 +229,7 @@ class IceCreamShopApp:
         #self.mydb = mysql.connector.connect(
         #    host="localhost",
         #    user="root",
-        #    password="fantasyape123",
+        #    password="",
         #    database="IceCream"
         #)
 
@@ -339,7 +339,7 @@ class IceCreamShopApp:
 
         self.rate_us_label = tk.Label(self.master, text="Rate Us!", font=("Arial", 24), bg="#FFB6C1")
         # self.total_label.grid(row=4, column=4, columnspan=15, padx=50, pady=70, sticky= "s")
-        self.rate_us_label.place(x=105, y=700)
+        self.rate_us_label.place(x=195, y=707)
 
         self.bases_label = tk.Label(self.master, text="Select a Base", font=("Vivaldi Italic", 34), bg="#FFB6C1")
         #self.bases_label.grid(row=0, column=0, sticky="n")
@@ -390,7 +390,7 @@ class IceCreamShopApp:
 
         self.bad_rating_button = tk.Button(self.master, image=photo, width=width, height=height,
                                            font=("Arial", 10), command=self.give_bad_rating)
-        self.bad_rating_button.place(x=35, y=749)  # Adjust these coordinates as needed
+        self.bad_rating_button.place(x=125, y=749)  # Adjust these coordinates as needed
 
     def create_ok_rating_button(self):
         img_path = 'neutral.jpeg'
@@ -407,7 +407,7 @@ class IceCreamShopApp:
 
         self.ok_rating_button = tk.Button(self.master, image=photo, width=width, height=height,
                                            font=("Arial", 10), command=self.give_ok_rating)
-        self.ok_rating_button.place(x=125, y=749)
+        self.ok_rating_button.place(x=215, y=749)
 
     def create_great_rating_button(self):
         img_path = 'smiley.jpeg'
@@ -424,7 +424,7 @@ class IceCreamShopApp:
 
         self.great_rating_button = tk.Button(self.master, image=photo, width=width, height=height,
                                            font=("Arial", 10), command=self.give_great_rating)
-        self.great_rating_button.place(x=215, y=749)
+        self.great_rating_button.place(x=305, y=749)
 
     def add_to_cart(self, option, price, category):
        # Debug: Output when adding to cart
