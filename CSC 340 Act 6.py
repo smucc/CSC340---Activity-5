@@ -501,7 +501,7 @@ class IceCreamShopApp:
             }
         ]
 
-        image_filenames = ['images3.jpg', 'images1.jpg', 'images2.jpg', 'images4.jpg', 'images5.jpg']
+        image_filenames = ['images1.jpg', 'images2.jpg', 'images3.jpg', 'images4.jpg', 'images5.jpg']
 
         for i, base_info in enumerate(base):
             base_name = base_info['Base'].replace("_", " ")
@@ -932,32 +932,43 @@ class IceCreamShopApp:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
 
     def give_bad_rating(self):
+        # Access the 'ratings' collection using the 'db' attribute
         global db
         ratings = db['ratings']
-        rating = {
-            "rating_value": "BAD",
-            "inserted_at": datetime.now()
-        }
-        ratings.insert_one(rating)
+
+        # Insert the new rating
+        ratings.insert_one({"rating_value": "BAD"})
+
+        # Check the total number of ratings
+        total_ratings = ratings.count_documents({})
+
+        # If there are already three ratings, remove the oldest one
+        if total_ratings > 3:
+            ratings.find_one_and_delete({}, sort=[('_id', 1)])
+
+
 
     def give_ok_rating(self):
         global db
         ratings = db['ratings']
-        rating = {
-            "rating_value": "OK",
-            "inserted_at": datetime.now()
-        }
-        ratings.insert_one(rating)
+        ratings.insert_one({"rating_value": "OK"})
+        total_ratings = ratings.count_documents({})
+
+        if total_ratings > 3:
+            ratings.find_one_and_delete({}, sort=[('_id', 1)])
+
+
         self.print_ratings()
 
     def give_great_rating(self):
         global db
         ratings = db['ratings']
-        rating = {
-            "rating_value": "GREAT",
-            "inserted_at": datetime.now()
-        }
-        ratings.insert_one(rating)
+        ratings.insert_one({"rating_value": "GREAT"})
+        total_ratings = ratings.count_documents({})
+
+        if total_ratings > 3:
+            ratings.find_one_and_delete({}, sort=[('_id', 1)])
+
 
     def update_recent_ratings(self):
         # Access the 'ratings' collection using the 'db' attribute
@@ -998,6 +1009,11 @@ class IceCreamShopApp:
         global db
         orders = db['orders']
         orders.delete_many({})
+
+    def reset_ratings_table(self):
+        global db
+        ratings = db['ratings']
+        ratings.delete_many({})
 
 
 
