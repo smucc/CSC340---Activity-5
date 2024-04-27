@@ -56,8 +56,8 @@ bases.delete_many({})
 bases.insert_many(base)
 
 # Print contents of the 'base' collection
-for document in bases.find({}):
-    print(document)
+#for document in bases.find({}):
+#    print(document)
 
 
 # Your flavor data
@@ -123,8 +123,8 @@ flavors.delete_many({})
 flavors.insert_many(flavor)
 
 # Print contents of the 'base' collection
-for document in flavors.find({}):
-    print(document)
+#for document in flavors.find({}):
+#    print(document)
 
 
 # Your topping data
@@ -192,8 +192,8 @@ toppings.delete_many({})
 toppings.insert_many(topping)
 
 # Print contents of the 'base' collection
-for document in toppings.find({}):
-    print(document)
+#for document in toppings.find({}):
+#    print(document)
 
 print('\n')
 
@@ -886,33 +886,47 @@ class IceCreamShopApp:
 
         self.print_orders()
 
-
     def display_most_popular_items(self):
-        cursor = self.mydb.cursor()
 
-        # Find the most popular base
-        cursor.execute("SELECT base, COUNT(*) AS base_count FROM Orders GROUP BY base ORDER BY base_count DESC LIMIT 1")
-        most_popular_base = cursor.fetchone()
+        global db
+        orders = db['orders']
+
+        # Aggregate the most popular base
+        most_popular_base = orders.aggregate([
+            {"$group": {"_id": "$base", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 1}
+        ])
+        most_popular_base = list(most_popular_base)
         if most_popular_base:
-            self.most_popular_base_label.config(text=f"Most Popular Base: {most_popular_base[0].replace('_', ' ')}")
+            self.most_popular_base_label.config(
+                text=f"Most Popular Base: {most_popular_base[0]['_id'].replace('_', ' ')}")
         else:
             self.most_popular_base_label.config(text=f"Most Popular Base: None")
 
-        # Find the most popular flavor
-        cursor.execute(
-            "SELECT flavor, COUNT(*) AS flavor_count FROM Orders GROUP BY flavor ORDER BY flavor_count DESC LIMIT 1")
-        most_popular_flavor = cursor.fetchone()
+        # Aggregate the most popular flavor
+        most_popular_flavor = orders.aggregate([
+            {"$group": {"_id": "$flavor", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 1}
+        ])
+        most_popular_flavor = list(most_popular_flavor)
         if most_popular_flavor:
-            self.most_popular_flavor_label.config(text=f"Most Popular Flavor: {most_popular_flavor[0].replace('_', ' ')}")
+            self.most_popular_flavor_label.config(
+                text=f"Most Popular Flavor: {most_popular_flavor[0]['_id'].replace('_', ' ')}")
         else:
             self.most_popular_flavor_label.config(text=f"Most Popular Flavor: None")
 
-        # Find the most popular topping
-        cursor.execute(
-            "SELECT toppings, COUNT(*) AS topping_count FROM Orders GROUP BY toppings ORDER BY topping_count DESC LIMIT 1")
-        most_popular_topping = cursor.fetchone()
+        # Aggregate the most popular topping
+        most_popular_topping = orders.aggregate([
+            {"$group": {"_id": "$toppings", "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+            {"$limit": 1}
+        ])
+        most_popular_topping = list(most_popular_topping)
         if most_popular_topping:
-            self.most_popular_topping_label.config(text=f"Most Popular Topping: {most_popular_topping[0].replace('_', ' ')}")
+            self.most_popular_topping_label.config(
+                text=f"Most Popular Topping: {most_popular_topping[0]['_id'].replace('_', ' ')}")
         else:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
 
@@ -954,6 +968,12 @@ class IceCreamShopApp:
         # Print each order document
         for order in all_orders:
             print(order)
+
+    def reset_orders_table(self):
+        global db
+        orders = db['orders']
+        orders.delete_many({})
+
 
 
 root = tk.Tk()
