@@ -158,7 +158,7 @@ class IceCreamShopApp:
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
-        self.base_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Base", command=self.confirm_base)
+        self.base_confirm_button = tk.Button(self.master, font = ("Arial", 24), text="Confirm Base", command=self.confirm_base)
         self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
         self.flavor_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
         self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
@@ -179,7 +179,7 @@ class IceCreamShopApp:
     from PIL import Image, ImageTk
 
     def create_bad_rating_button(self):
-        img_path = 'frowny.png'
+        img_path = 'Screenshot 2024-04-19 at 2.55.08 PM.png'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
@@ -196,7 +196,7 @@ class IceCreamShopApp:
         self.bad_rating_button.place(x=35, y=749)  # Adjust these coordinates as needed
 
     def create_ok_rating_button(self):
-        img_path = 'neutral.png'
+        img_path = 'Screenshot 2024-04-19 at 2.54.40 PM.png'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
@@ -213,7 +213,7 @@ class IceCreamShopApp:
         self.ok_rating_button.place(x=125, y=749)
 
     def create_great_rating_button(self):
-        img_path = 'smiley.png'
+        img_path = 'Screenshot 2024-04-19 at 2.53.31 PM.png'
         img = Image.open(img_path)
 
         # Resize the image while preserving its aspect ratio
@@ -322,7 +322,7 @@ class IceCreamShopApp:
             command = lambda opt=flavor, prc=price: self.select_flavor(opt, prc)
             row_num = i // 3  # Determine the row number
             col_num = i % 3  # Determine the column number
-            button = tk.Button(self.flavor_options_frame, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED, bg="#40FEBE", highlightthickness=0, highlightbackground="#40FEBE")
+            button = tk.Button(self.flavor_options_frame, width=140, height=118, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED, bg="#40FEBE", highlightthickness=0, highlightbackground="#40FEBE")
             button.image = photo  # Keep reference to image
             button.grid(row=row_num, column=col_num, padx=5, pady=5)
 
@@ -349,7 +349,7 @@ class IceCreamShopApp:
             command = lambda opt=topping, prc=price: self.select_topping(opt, prc)
             row_num = i // 3  # Determine the row number
             col_num = i % 3  # Determine the column number
-            button = tk.Button(self.topping_options_frame, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED, bg="#40FEBE", highlightthickness=0, highlightbackground="#40FEBE")
+            button = tk.Button(self.topping_options_frame, width=140, height=118, text=button_text, image=photo, compound='top', command=command, state=tk.DISABLED, bg="#40FEBE", highlightthickness=0, highlightbackground="#40FEBE")
             button.image = photo  # Keep reference to image
             button.grid(row=row_num, column=col_num, padx=5, pady=5)
 
