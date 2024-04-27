@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="d85e8427-0f47-464d-bb71-7375cd54b4f7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/three_updated.py" beforeDir="false" afterPath="$PROJECT_DIR$/three_updated.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +40,7 @@
     "Python.three_test1.executor": "Run",
     "Python.three_test2.executor": "Run",
     "Python.three_updated.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "last_opened_file_path": "/Users/sofiamucci/Documents/GitHub/CSC340---Activity-5",
@@ -58,7 +58,7 @@
     ]
   }
 }]]></component>
-  <component name="RunManager" selected="Python.three">
+  <component name="RunManager">
     <configuration name="Not Null" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="CSC340---Activity-5" />
       <option name="ENV_FILES" value="" />
@@ -158,20 +158,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.__init__" />
-      <item itemvalue="Python.three_updated" />
-      <item itemvalue="Python.three" />
-      <item itemvalue="Python.Not Null" />
-    </list>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PY-241.14494.241" />
-        <option value="bundled-python-sdk-0509580d9d50-28c9f5db9ffe-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-241.14494.241" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -183,6 +169,7 @@
       <updated>1712948306205</updated>
       <workItem from="1712948307422" duration="4999000" />
       <workItem from="1713072775347" duration="26106000" />
+      <workItem from="1714233464006" duration="197000" />
     </task>
     <servers />
   </component>
