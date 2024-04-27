@@ -4,6 +4,7 @@ import mysql.connector
 import decimal
 from PIL import Image, ImageTk
 from tkinter import PhotoImage
+from datetime import datetime
 
 host = "localhost"
 port_number = 27017
@@ -225,12 +226,12 @@ class IceCreamShopApp:
         master.attributes("-fullscreen", True)
 
         # Connect to MySQL database
-        self.mydb = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="fantasyape123",
-            database="IceCream"
-        )
+        #self.mydb = mysql.connector.connect(
+        #    host="localhost",
+        #    user="root",
+        #    password="fantasyape123",
+        #    database="IceCream"
+        #)
 
         # Creating frames for each category
         self.base_frame = tk.Frame(master, bg="#FFB6C1")
@@ -356,9 +357,9 @@ class IceCreamShopApp:
         # Create confirm buttons for base, flavor, and topping selection
         self.base_confirm_button = tk.Button(self.master, font = ("Arial", 24), text="Confirm Base", command=self.confirm_base)
         self.base_confirm_button.grid(row=2, column=0, padx=5, pady=5)
-        self.flavor_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
+        self.flavor_confirm_button = tk.Button(self.master, font = ("Arial", 24), text="Confirm Flavor", command=self.confirm_flavor, state=tk.DISABLED)
         self.flavor_confirm_button.grid(row=2, column=2, padx=5, pady=5)
-        self.topping_confirm_button = tk.Button(self.master, width=19, height=5, text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
+        self.topping_confirm_button = tk.Button(self.master, font = ("Arial", 24), text="Confirm Topping", command=self.confirm_topping, state=tk.DISABLED)
         self.topping_confirm_button.grid(row=2, column=4, padx=5, pady=5)
 
     def create_reset_button(self):
@@ -931,32 +932,45 @@ class IceCreamShopApp:
             self.most_popular_topping_label.config(text=f"Most Popular Topping: None")
 
     def give_bad_rating(self):
-        cursor = self.mydb.cursor()
-        cursor.callproc("InsertRating", ("BAD",))
-        self.mydb.commit()
-
+        global db
+        ratings = db['ratings']
+        rating = {
+            "rating_value": "BAD",
+            "inserted_at": datetime.now()
+        }
+        ratings.insert_one(rating)
 
     def give_ok_rating(self):
-        cursor = self.mydb.cursor()
-        cursor.callproc("InsertRating", ("OK",))
-        self.mydb.commit()
+        global db
+        ratings = db['ratings']
+        rating = {
+            "rating_value": "OK",
+            "inserted_at": datetime.now()
+        }
+        ratings.insert_one(rating)
+        self.print_ratings()
 
     def give_great_rating(self):
-        cursor = self.mydb.cursor()
-        cursor.callproc("InsertRating", ("GREAT",))
-        self.mydb.commit()
+        global db
+        ratings = db['ratings']
+        rating = {
+            "rating_value": "GREAT",
+            "inserted_at": datetime.now()
+        }
+        ratings.insert_one(rating)
 
     def update_recent_ratings(self):
-        # Retrieve the most recent 3 ratings from the Ratings table
-        cursor = self.mydb.cursor()
-        cursor.execute("SELECT rating_value FROM Ratings ORDER BY rating_id DESC LIMIT 3")
-        recent_ratings = cursor.fetchall()
+        # Access the 'ratings' collection using the 'db' attribute
+        global db
+        ratings = db['ratings']
 
-        # Format the recent ratings as a string
-        formatted_ratings = ", ".join([rating[0] for rating in recent_ratings])
+        # Retrieve the most recent 3 ratings from the 'ratings' collection
+        recent_ratings_cursor = ratings.find({}, {'rating_value': 1}).sort('_id', -1).limit(3)
 
-        # Update the text variable of the label to display the recent ratings
-        '''self.recent_ratings_text.set(formatted_ratings)'''
+        # Extract the rating values from the cursor
+        recent_ratings = [rating['rating_value'] for rating in recent_ratings_cursor]
+
+        # Now 'recent_ratings' contains the most recent 3 ratings
 
     def print_orders(self):
         # Retrieve all documents from the orders collection
@@ -968,6 +982,17 @@ class IceCreamShopApp:
         # Print each order document
         for order in all_orders:
             print(order)
+
+    def print_ratings(self):
+        # Retrieve all documents from the orders collection
+        global db
+        ratings = db['ratings']
+        all_ratings = ratings.find()
+
+        print("All ratings:")
+        # Print each order document
+        for r in all_ratings:
+            print(r)
 
     def reset_orders_table(self):
         global db
