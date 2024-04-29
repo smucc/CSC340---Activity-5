@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import tkinter as tk
-import mysql.connector
+#import mysql.connector
 import decimal
 from PIL import Image, ImageTk
 from tkinter import PhotoImage
@@ -303,6 +303,10 @@ class IceCreamShopApp:
         # Display the most recent ratings initially
         self.update_recent_ratings()
 
+        #self.reset_orders_table()
+        #self.reset_ratings_table()
+        self.print_orders()
+        self.print_ratings()
 
     def create_frames_and_dividers(self):
         # Configuring grid rows and columns for flexibility
@@ -341,17 +345,17 @@ class IceCreamShopApp:
         # self.total_label.grid(row=4, column=4, columnspan=15, padx=50, pady=70, sticky= "s")
         self.rate_us_label.place(x=195, y=707)
 
-        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Vivaldi Italic", 34), bg="#FFB6C1")
+        self.bases_label = tk.Label(self.master, text="Select a Base", font=("Arial", 34), bg="#FFB6C1")
         #self.bases_label.grid(row=0, column=0, sticky="n")
-        self.bases_label.place(x=129, y=0)
+        self.bases_label.place(x=119, y=0)
 
-        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Vivaldi Italic", 34), bg="#FFB6C1")
+        self.flavors_label = tk.Label(self.master, text="Select a Flavor", font=("Arial", 34), bg="#FFB6C1")
         #self.flavors_label.grid(row=0, column=2,sticky="n")
-        self.flavors_label.place(x=668, y=0)
+        self.flavors_label.place(x=638, y=0)
 
-        self.toppings_label = tk.Label(self.master, text="Select up to 5 Toppings", font=("Vivaldi Italic", 34), bg="#FFB6C1")
+        self.toppings_label = tk.Label(self.master, text="Select up to 5 Toppings", font=("Arial", 34), bg="#FFB6C1")
         #self.toppings_label.grid(row=0, column=4, sticky="n")
-        self.toppings_label.place(x=1100, y=0)
+        self.toppings_label.place(x=1050, y=0)
 
     def create_confirm_buttons(self):
         # Create confirm buttons for base, flavor, and topping selection
@@ -958,8 +962,6 @@ class IceCreamShopApp:
             ratings.find_one_and_delete({}, sort=[('_id', 1)])
 
 
-        self.print_ratings()
-
     def give_great_rating(self):
         global db
         ratings = db['ratings']
@@ -1014,7 +1016,6 @@ class IceCreamShopApp:
         global db
         ratings = db['ratings']
         ratings.delete_many({})
-
 
 
 root = tk.Tk()
